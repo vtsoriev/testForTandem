@@ -41,7 +41,6 @@ public class TestApp {
         rows.set(106, row106);
 
 
-
         for (String[] r : rows) {
             for (int k = 0; k < r.length; k++)
                 System.out.print("| " + r[k] + "|");
@@ -51,11 +50,14 @@ public class TestApp {
 
 
         System.out.println("*************************************************");
-
-        IStringRowsListSorter sortedRows = Task1Impl.getInstance();
-        sortedRows.sort(rows,1);
-        sortedRows.sort(Task1Impl.sortedRows, 0);
-        sortedRows.display();
+        Task1Impl.INSTANCE.display();
+        System.out.println("*************************************************");
+        Task1Impl.INSTANCE.sort(rows, 1);
+        Task1Impl.INSTANCE.sort(Task1Impl.sortedRows, 0);
+        Task1Impl.INSTANCE.display();
+        System.out.println("*************************************************");
+        Task1Impl.INSTANCE.sort(rows.subList(55,130), 0);
+        Task1Impl.INSTANCE.display();
 
 
     }
