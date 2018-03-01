@@ -1,11 +1,13 @@
 package ru.tandemservice.test.task1;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
 /**
+ * staff@tandemservice.ru
  * <h1>Задание №1</h1>
  * Реализуйте интерфейс {@link IStringRowsListSorter}.
  * <p>
@@ -18,32 +20,24 @@ public class Task1Impl implements IStringRowsListSorter {
     private Task1Impl() {
     }
 
-    public static volatile List<String[]> sortedRows;
-
-
-  /*  public static IStringRowsListSorter getInstance() {
-        return INSTANCE;
-    }*/
-
-
     @Override
     public void sort(final List<String[]> rows, final int columnIndex) {
-        // "напишите здесь свою реализацию. Мы ждем от вас хорошо структурированного, документированного и понятного кода".
-        // Т.к. sorted() это stateful операция, выигрыш от использования parrallelStream() не очевиден.
-        sortedRows = rows.stream()
-                .sorted(Comparator.comparing(r -> r[columnIndex], Comparator.nullsFirst(Task1Impl.SubStringComparator)))
-                .collect(Collectors.toList());
+
+        if (columnIndex < 0 || columnIndex >= rows.get(0).length)
+            throw new IllegalStateException("Value passing to the method sort() parameter сolumnIndex is not valid! Check for valid parameter arguments.");
+        synchronized (this) {
+            rows.sort(Comparator.comparing(r -> r[columnIndex], Comparator.nullsFirst(Task1Impl.SubStringComparator)));
+        }
     }
 
     // Метод получает в качестве аргумента строку, а возвращает массив подстрок, разбивая ее на последовательности цифр,
-// которые в дальнейшем можно интерпретировать как целочисленные значения, и последовательности других знаков.
-    private static String[] getSubSrings(String string) {
+    // которые в дальнейшем можно интерпретировать как целочисленные значения, и последовательности других знаков:
+    private static String[] getSubStrings(String string) {
         List<String> subStrings = new ArrayList<>();
         String subStringWithInt = "";
         String subStringWithoutInt = "";
-
-//Т.к. нет информации об использовании какого-либо разделителя последовательностей цифр и др.последовательностей, строковый метод
-// split() использовать не получится, придется перебирать в цикле каждый символ строки и разбивать ее на подстроки в ручном режиме:
+        //Т.к. нет информации об использовании какого-либо разделителя последовательностей цифр и др.последовательностей, строковый метод
+        // split() использовать не получится, придется перебирать в цикле каждый символ строки и разбивать ее на подстроки в ручном режиме:
         for (int j = 0; j < string.length(); j++) {
             char ch = string.charAt(j);
             //если символ является цифрой, он добавляется к подстроке subStringWithInt,
@@ -75,16 +69,14 @@ public class Task1Impl implements IStringRowsListSorter {
     }
 
     //Для реализации правил сравнения подстрок нужен свой вариант компаратора - в анонимном классе переопределяем метод compare():
-    private static Comparator<String> SubStringComparator = (o1, o2) -> {
+    public static Comparator<String> SubStringComparator = (o1, o2) -> {
         //Получаем два массива подстрок:
-        String[] one = Task1Impl.getSubSrings(o1);
-        String[] another = Task1Impl.getSubSrings(o2);
+        String[] one = Task1Impl.getSubStrings(o1);
+        String[] another = Task1Impl.getSubStrings(o2);
         //Сравниваем соответствующие подстроки каждой строки между собой. При этом если обе строки состоят из цифр,
         //они интерпретируются как целочисленные значения:
         for (int j = 0; j < one.length && j < another.length; j++) {
             if (one[j].matches("[0-9]+") && another[j].matches("[0-9]+")) {
-                //if (Integer.parseInt(one[j]) == Integer.parseInt(another[j]))
-                // continue;
                 if (Integer.parseInt(one[j]) > Integer.parseInt(another[j]))
                     return +1;
                 if (Integer.parseInt(one[j]) < Integer.parseInt(another[j]))
@@ -94,18 +86,4 @@ public class Task1Impl implements IStringRowsListSorter {
         }
         return o1.compareTo(o2);
     };
-
-
-    @Override
-    public void display() {
-        if (sortedRows != null) {
-            for (String[] r : sortedRows) {
-                for (String aR : r)
-                    System.out.print("|" + aR + "|");
-                System.out.println();
-            }
-        }
-        else
-            System.out.println("Нужно вызвать метод sort(), передав ему список строковых массивов, до того, как вызывать метод display()");
-    }
 }

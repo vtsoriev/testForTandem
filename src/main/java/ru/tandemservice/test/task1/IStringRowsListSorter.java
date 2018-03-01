@@ -21,6 +21,4 @@ public interface IStringRowsListSorter {
      * @param columnIndex индекс колонки, по которой нужно провести сортировку
      */
     void sort(List<String[]> rows, int columnIndex);
-    void display();
-
 }
