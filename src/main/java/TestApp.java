@@ -4,8 +4,8 @@ import ru.tandemservice.test.task1.*;
 import ru.tandemservice.test.task2.*;
 
 public class TestApp {
-    private final static int MAXSIZE = 100;
-    private static ElementExampleImpl.Context context = new ElementExampleImpl.Context();
+    private final static int MAXSIZE = 10000;
+    private final static ElementExampleImpl.Context CONTEXT = new ElementExampleImpl.Context();
 
     public static void main(String[] args) {
         //task1:
@@ -22,7 +22,7 @@ public class TestApp {
         //task2:
         List<IElement> ListForTask2 = makeListForTask2(MAXSIZE);
         Task2Impl.INSTANCE.assignNumbers(Collections.unmodifiableList(ListForTask2));
-        System.out.println("NUMBER OF OPERATIONS setupNumber()............." + context.getOperationCount());
+        System.out.println("NUMBER OF OPERATIONS setupNumber()............." + CONTEXT.getOperationCount());
 
     }
 
@@ -94,7 +94,7 @@ public class TestApp {
             setWithRandomNumbers.add((int) (Math.random() * size));
         Iterator<Integer> itr = setWithRandomNumbers.iterator();
         for (int j = 0; j < size; j++) {
-            IElement theElement = new ElementExampleImpl(context, itr.next());
+            IElement theElement = new ElementExampleImpl(CONTEXT, itr.next());
             newList.add(theElement);
         }
         return newList;
