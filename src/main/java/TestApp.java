@@ -4,47 +4,39 @@ import ru.tandemservice.test.task1.*;
 import ru.tandemservice.test.task2.*;
 
 public class TestApp {
-    private final static int MAXSIZE = 10000;
+    private final static int MAXSIZE = 100;
+    private static ElementExampleImpl.Context context = new ElementExampleImpl.Context();
 
     public static void main(String[] args) {
         //task1:
-        List<String[]> rows = makeListForTest(150);
-        display(rows);
-        Task1Impl.INSTANCE.sort(rows, 0);
-        display(rows);
-        Task1Impl.INSTANCE.sort(rows, 2);
-        display(rows);
+        List<String[]> ListForTask1 = makeListForTask1(MAXSIZE);
+        display(ListForTask1);
+        Task1Impl.INSTANCE.sort(ListForTask1, 0);
+        display(ListForTask1);
+        Task1Impl.INSTANCE.sort(ListForTask1, 1);
+        display(ListForTask1);
 
         /////////////////////////////////////
         /////////////////////////////////////
 
         //task2:
-        List<IElement> newList = new ArrayList<>();
-        ElementExampleImpl.Context context = new ElementExampleImpl.Context();
-        Set<Integer> setWithRandomNumbers = new LinkedHashSet<>();
-
-        while (setWithRandomNumbers.size() < MAXSIZE)
-            setWithRandomNumbers.add((int) (Math.random() * MAXSIZE));
-        Iterator<Integer> itr = setWithRandomNumbers.iterator();
-        for (int j = 0; j < MAXSIZE; j++) {
-            IElement theElement = new ElementExampleImpl(context, itr.next());
-            newList.add(theElement);
-        }
-        Task2Impl.INSTANCE.assignNumbers(Collections.unmodifiableList(newList));
-        System.out.println("NUMBER OF OPERATION setupNumber().............." + context.getOperationCount());
+        List<IElement> ListForTask2 = makeListForTask2(MAXSIZE);
+        Task2Impl.INSTANCE.assignNumbers(Collections.unmodifiableList(ListForTask2));
+        System.out.println("NUMBER OF OPERATIONS setupNumber()............." + context.getOperationCount());
 
     }
 
     private static void display(List<String[]> list) {
         for (String[] r : list) {
+            if (r!=null)
             for (String aR : r) {
-                String blankets = "";
+                StringBuilder blankets = new StringBuilder();
                 if (aR != null) {
                     while (aR.length() + blankets.length() <= 20)
-                        blankets += " ";
+                        blankets.append(" ");
                 } else
                     while (blankets.length() <= 16)
-                        blankets += " ";
+                        blankets.append(" ");
 
                 System.out.print("| " + aR + blankets + "|");
             }
@@ -54,10 +46,10 @@ public class TestApp {
         System.out.println("*************************************************");
     }
 
-    private static List<String[]> makeListForTest(int size) {
+    private static List<String[]> makeListForTask1(int size) {
         List<String[]> rows = new ArrayList<>();
         String[] row;
-        for (int j = 0; j < size; j++) {
+        for (int j = 0; j < (size - 7); j++) {
             row = new String[7];
             row[0] = Integer.toString(j);
             if (Integer.parseInt(row[0]) % 7 == 0) {
@@ -75,12 +67,12 @@ public class TestApp {
             rows.add(row);
         }
         String[] row1 = {"000", "STRING #00000", null, "ABCD", "EFGH", "", "1"};
-        String[] row2 = {"000", "STRING #002", null, "BBCD", "FFGH", "", "0"};
-        String[] row3 = {"000", "STRING #004", null, "BBCD", "FFGH", "", "0"};
+        String[] row2 = {"001", "STR#002***ЕЕК!?**09", null, "BBCD", "FFGH", "", "0"};
+        String[] row3 = {"001", "STR#002***ЕЕК!?**03", null, "BBCD", "FFGH", "", "0"};
         String[] row4 = {"010", "STRING #003", null, "BBCD", "FFGH", "", "0"};
-        String[] row5 = {"000", "STRING #006", null, "BBCD", "FFGH", "", "0"};
+        String[] row5 = {"000", "0006 STRING # ! @", "", "BBCD", "FFGH", "", "0"};
         String[] row6 = {"000", "STRING #005", null, "BBCD", "FFGH", "", "0"};
-        String[] row7 = {"000", "STRING #001", null, "BBCD", "FFGH", "", "0"};
+        String[] row7 = {"000", "STRING #001", null, "BBCD", "FFGH", "", "ЕЕЕЕЕЕЕЕЕЕЕЕ"};
         rows.add(row1);
         rows.add(row2);
         rows.add(row3);
@@ -89,6 +81,22 @@ public class TestApp {
         rows.add(row6);
         rows.add(row7);
 
+
         return rows;
+    }
+
+    private static List<IElement> makeListForTask2(int size){
+        List<IElement> newList = new ArrayList<>();
+
+        Set<Integer> setWithRandomNumbers = new LinkedHashSet<>();
+
+        while (setWithRandomNumbers.size() < size)
+            setWithRandomNumbers.add((int) (Math.random() * size));
+        Iterator<Integer> itr = setWithRandomNumbers.iterator();
+        for (int j = 0; j < size; j++) {
+            IElement theElement = new ElementExampleImpl(context, itr.next());
+            newList.add(theElement);
+        }
+        return newList;
     }
 }

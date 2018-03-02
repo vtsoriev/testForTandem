@@ -129,11 +129,11 @@ public class Task2Impl implements IElementNumberAssigner {
             if (element.getNumber() != elements.indexOf(element)) {
                 theMap.put(element.getNumber(), elements.indexOf(element));
             }
-        }// end for
+        }
 
         /*
-        Эти две переменные нужны только для отладки
-        (подсчета кол-ва итераций внешнего цикла и количества циклических последовательностей).
+        Эти две переменные нужны только для подсчета кол-ва итераций внешнего цикла
+        и количества циклических последовательностей.
         Их можно удалить:
         */
         int numberOfIteration = 0, numberOfCycles = 0;
@@ -192,7 +192,7 @@ public class Task2Impl implements IElementNumberAssigner {
        /* for (IElement element : elements) {
             System.out.println("Index: " + elements.indexOf(element) + ". Number: " + element.getNumber());
         }*/
-        System.out.println("NUMBER OF ITERATION while(!theMap.isEmpty())..." + numberOfIteration);
+        System.out.println("NUMBER OF ITERATIONS while(!theMap.isEmpty()).." + numberOfIteration);
         System.out.println("NUMBER OF CYCLES..............................." + numberOfCycles);
     }
 

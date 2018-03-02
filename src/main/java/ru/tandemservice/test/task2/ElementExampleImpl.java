@@ -62,8 +62,9 @@ public final class ElementExampleImpl implements IElement {
         this.context.operationCount++;
 
         // по условию задачи, данная операция «долгая»
-        // try { Thread.sleep(10); }
-        // catch (final Throwable t) {}
+       /* try { Thread.sleep(10);
+            System.out.println("Waiting for end of executing operation (10 ms)");}
+        catch (final Throwable t) {}*/
     }
 
     @Override
