@@ -4,7 +4,7 @@ import ru.tandemservice.test.task1.*;
 import ru.tandemservice.test.task2.*;
 
 public class TestApp {
-    private final static int MAXSIZE = 10000;
+    private final static int MAXSIZE = 1000;
     private final static ElementExampleImpl.Context CONTEXT = new ElementExampleImpl.Context();
 
     public static void main(String[] args) {
