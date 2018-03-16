@@ -11,14 +11,12 @@ import java.util.*;
  * большим плюсом (хотя это и не обязательно) будет оценка числа операций, доказательство оптимальности
  * или указание области, в которой алгоритм будет оптимальным.</p>
  */
-public class Task2Impl implements IElementNumberAssigner {
+public class Task2Impl_mistake implements IElementNumberAssigner {
 
     // ваша реализация должна работать, как singleton. даже при использовании из нескольких потоков.
 
-    public static final IElementNumberAssigner INSTANCE = new Task2Impl();
-
-    private Task2Impl() {
-    }
+    public static final IElementNumberAssigner INSTANCE = new Task2Impl_mistake();
+    private Task2Impl_mistake(){}
 
 
     /**
@@ -118,77 +116,47 @@ public class Task2Impl implements IElementNumberAssigner {
 
     @Override
     public synchronized void assignNumbers(final List<IElement> elements) {
-        for (IElement element : elements) {
-            System.out.println("Index: " + elements.indexOf(element) + ". Number: " + element.getNumber());
-        }
-
-        /*
+         /*
           Т.к. изначально коллекция не содержит элементов, номера которых повторяются, номера элементов,
           хранящиеся в поле ElementExampleImpl#number, можно сохранить в качестве ключей в отображении,
           значениям же присваивать индекс элемента в переданном в качестве аргумента метода списке.
-          Для сортировки номеров можно использовать ArrayList.
-
+          При этом номер элемента и его индекс добавляются в отображение только при условии их несовпадения
+          (если они совпадают, значит порядковый номер элемента правильный и его не нужно менять):
          */
 
         Map<Integer, Integer> theMap = new HashMap<>();
-        List<Integer> numbers = new ArrayList<>(elements.size());
-
-        // В цикле пробегаемся по переданному нам списку, заполняя отображение и список с номерами:
         for (IElement element : elements) {
-            int number = element.getNumber();
-            theMap.put(number, elements.indexOf(element));
-            numbers.add(number);
+            if (element.getNumber() != elements.indexOf(element)) {
+                theMap.put(element.getNumber(), elements.indexOf(element));
+            }
         }
-        // Сортируем список с номерами:
-        numbers.sort(Integer::compareTo);
-        // Сохраняем в переменную максимальное значение, которое принимает поле номер в переданном списке
-        // (оно нам понадобится для назначения временного номера элементу, чтобы разбить "зацикленную" последовательность номеров):
-        int maxNumberValue = numbers.get(numbers.size() - 1);
 
-
-
-       /* Эти три переменные нужны только для подсчета кол-ва итераций внешнего и внутреннего цикла
+        /*
+        Эти две переменные нужны только для подсчета кол-ва итераций внешнего цикла
         и количества циклических последовательностей.
         Их можно удалить:
         */
-        int numberOfIterationOuterWhile = 0, numberOfIterationInnerWhile = 0, numberOfCycles = 0;
+        int numberOfIteration = 0, numberOfCycles = 0;
+
 
         // Внешний цикл выполняется до тех пор, пока отображение не станет пустым
-        // (т.е. у каждого элемента списка elements, переданного в качестве аргумента, с индексом n
-        // номера будут совпадать со значением, хранящемся в отсортированном списке numbers по этому же индексу n):
-
-        Set<Map.Entry<Integer, Integer>> entrySet = theMap.entrySet();
-
-
+        // (т.е. у всех элементов списка номера будут совпадать с их индексами в списке):
 
         while (!theMap.isEmpty()) {
-            numberOfIterationOuterWhile++;
-
+            numberOfIteration++;
+            Set<Map.Entry<Integer, Integer>> entrySet = theMap.entrySet();
             Iterator<Map.Entry<Integer, Integer>> iterator = entrySet.iterator();
             int count = theMap.size();
-
             while (iterator.hasNext()) {
-                numberOfIterationInnerWhile++;
                 Map.Entry<Integer, Integer> entry = iterator.next();
                 int listIndex = entry.getValue();
-
-                if (entry.getKey().equals(numbers.get(listIndex))) {
-                    System.out.println("Текущий номер элемента совпал с тем, который он и должен иметь по порядку");
-                    System.out.println("Index: " + entry.getValue() + ". Number: " + entry.getKey());
-                    iterator.remove();
-                    continue;
-                }
-
-                /*
-                с помощью следующего выражения if обеспечивается условие
-                "вызов {@code element.setNumber(i)} разрешен ⇔   ∀ e ∊ {@code elements} (e.number ≠ i)"
-                т.е. что вызов element.setNumber(i) выполняется тогда и только тогда, когда для всех элементов e, принадлежащих elements, e.number не равняется i.
-
-                */
-                if (!theMap.containsKey(numbers.get(listIndex))) {
-                    System.out.println("Переназначаем номер! Было: " + elements.get(listIndex).getNumber() + " Стало: " + numbers.get(listIndex));
+                //с помощью следующего выражения if обеспечивается условие
+                // "вызов {@code element.setNumber(i)} разрешен ⇔   ∀ e ∊ {@code elements} (e.number ≠ i)"
+                //т.е. что вызов element.setNumber(i) выполняется тогда и только тогда, когда для всех элементов e, принадлежащих elements, e.number не равняется i.
+                if (!theMap.containsKey(listIndex)) {
+                    //System.out.println("Переназначаем номер! Было: " + elements.get(listIndex).getNumber() + " Стало: " + listIndex);
                     //Меняем номер элемента:
-                    elements.get(listIndex).setupNumber(numbers.get(listIndex));
+                    elements.get(listIndex).setupNumber(listIndex);
                     //Удаляем запись об элементе:
                     iterator.remove();
                 }
@@ -203,21 +171,29 @@ public class Task2Impl implements IElementNumberAssigner {
                 //System.out.println("\nWE HAVE CYCLES IN THE GRAPH!!!!");
                 iterator = entrySet.iterator();
                 Map.Entry<Integer, Integer> entry = iterator.next();
-                int currentElementIndex = entry.getValue();
+                int currentElementValue = entry.getValue();
 
+                /*
+                //Если захочется посмотреть элементы, образующие "цикл" перенумерации:
+                Set<Integer> setForCycles = new LinkedHashSet<>();
+                for (; setForCycles.add(currentElementValue); currentElementValue = theMap.get(currentElementValue)) {
+                    System.out.println("Adding in set = " + currentElementValue);
+                }
+                Integer[] f = setForCycles.toArray(new Integer[setForCycles.size()]);
+                System.out.println("Последнее значение " + f[f.length - 1]);
+                */
                 System.out.println("BREAK THE CYCLE #" + numberOfCycles++);
-                theMap.put(maxNumberValue + 1, currentElementIndex);
-                theMap.remove(elements.get(currentElementIndex).getNumber());
-                elements.get(currentElementIndex).setupNumber(maxNumberValue + 1);
+
+                theMap.put(-1, currentElementValue);
+                theMap.remove(elements.get(currentElementValue).getNumber());
+                elements.get(currentElementValue).setupNumber(-1);
             }
         }
 
-        for (IElement element : elements) {
+       /* for (IElement element : elements) {
             System.out.println("Index: " + elements.indexOf(element) + ". Number: " + element.getNumber());
-        }
-        System.out.println("NUMBER OF ITERATIONS while(!theMap.isEmpty()).." + numberOfIterationOuterWhile);
-        System.out.println("NUMBER OF ITERATIONS while(iterator.hasNext()).." + numberOfIterationInnerWhile);
-
+        }*/
+        System.out.println("NUMBER OF ITERATIONS while(!theMap.isEmpty()).." + numberOfIteration);
         System.out.println("NUMBER OF CYCLES..............................." + numberOfCycles);
     }
 

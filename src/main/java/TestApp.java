@@ -4,17 +4,17 @@ import ru.tandemservice.test.task1.*;
 import ru.tandemservice.test.task2.*;
 
 public class TestApp {
-    private final static int MAXSIZE = 1000;
+    private final static int MAXSIZE = 10000;
     private final static ElementExampleImpl.Context CONTEXT = new ElementExampleImpl.Context();
 
     public static void main(String[] args) {
         //task1:
         List<String[]> ListForTask1 = makeListForTask1(MAXSIZE);
-        display(ListForTask1);
+        //display(ListForTask1);
         Task1Impl.INSTANCE.sort(ListForTask1, 0);
-        display(ListForTask1);
+        //display(ListForTask1);
         Task1Impl.INSTANCE.sort(ListForTask1, 1);
-        display(ListForTask1);
+        //display(ListForTask1);
 
         /////////////////////////////////////
         /////////////////////////////////////
@@ -91,7 +91,7 @@ public class TestApp {
         Set<Integer> setWithRandomNumbers = new LinkedHashSet<>();
 
         while (setWithRandomNumbers.size() < size)
-            setWithRandomNumbers.add((int) (Math.random() * size));
+            setWithRandomNumbers.add(((int) (Math.random() * size * 5)) - ((int) (Math.random() * size * 5)));
         Iterator<Integer> itr = setWithRandomNumbers.iterator();
         for (int j = 0; j < size; j++) {
             IElement theElement = new ElementExampleImpl(CONTEXT, itr.next());
