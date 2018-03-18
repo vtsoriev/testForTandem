@@ -168,44 +168,6 @@ public class Task2Impl implements IElementNumberAssigner {
             int count = theMap.size();
 
 
-            /*Map.Entry<Integer, Integer> entry1 = iterator.next();
-            Set<Integer> setForChains = new LinkedHashSet<>();
-            int elementIndex = entry1.getValue();
-            while (setForChains.add(numbers.get(elementIndex))) {
-                if (numbers.get(elementIndex) == null || theMap.get(numbers.get(elementIndex))== null) {
-                    System.out.println("*********************************Цепочка закончилась!");
-                    break;
-                }
-                elementIndex = theMap.get(numbers.get(elementIndex));
-                System.out.println("Adding in set. number = " + numbers.get(elementIndex) + "/ Index = " + elementIndex);
-            }
-            Integer[] arrayForChains = setForChains.toArray(new Integer[setForChains.size()]);
-            System.out.println("Последнее значение " + arrayForChains[arrayForChains.length - 1]);
-            for (int j = arrayForChains.length - 1; j > 0; j--) {
-                numberOfIterationInnerFor++;
-                int num = arrayForChains[j];
-                //System.out.println("Номер, по которому мы можем получить индекс, который этот номер имеет в списке numbers " + num);
-                //System.out.println("Индекс в numbers, который имеет элемент num " + numbers.indexOf(num));
-                    *//*
-                    Фокус заключается в том, как получить номер предыдущего элемента в последовательности
-                    (т.е.ключ для отображения theMap, необходимый нам для того, чтобы из этого отображения извлечь индекс.
-                    Этот индекс, в свою очередь, нам нужен для того,
-                    чтобы обратиться к элементу из списка elements для изменения номера этого элемента
-                    методом IElement#setupNumber().
-                    *//*
-                int numInElements = elements.get(numbers.indexOf(num)).getNumber();
-                elementIndex = theMap.get(numInElements);
-                theMap.remove(elements.get(elementIndex).getNumber());
-                elements.get(elementIndex).setupNumber(numbers.get(elementIndex));
-            } //end for loop
-
-
-*/
-
-
-
-
-
             //Внутренний цикл while
             while (iterator.hasNext()) {
                 numberOfIterationInnerWhile++;
@@ -235,6 +197,8 @@ public class Task2Impl implements IElementNumberAssigner {
                     iterator.remove();
                 }
             }//end inner while
+
+
             //Если во внутреннем цикле while при последней итерации ни одна запись не была удалена из отображения,
             // то переменная count будет равна текущему размеру отображения theMap. Это сигнализирует о том,
             // что в отображении остались только зацикленные последовательности чисел
