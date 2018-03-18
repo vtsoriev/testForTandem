@@ -4,7 +4,7 @@ import ru.tandemservice.test.task1.*;
 import ru.tandemservice.test.task2.*;
 
 public class TestApp {
-    private final static int MAXSIZE = 100000;
+    private final static int MAXSIZE = 10;
     private final static ElementExampleImpl.Context CONTEXT = new ElementExampleImpl.Context();
 
     public static void main(String[] args) {
@@ -21,10 +21,10 @@ public class TestApp {
 
         //task2:
         List<IElement> listForTask2 = makeListForTask2(MAXSIZE);
-        //displayListOfElements(listForTask2);
+        displayListOfElements(listForTask2);
         Task2ImplSimple.INSTANCE.assignNumbers(Collections.unmodifiableList(listForTask2));
         System.out.println("NUMBER OF OPERATIONS setupNumber()........................" + CONTEXT.getOperationCount());
-        //displayListOfElements(listForTask2);
+        displayListOfElements(listForTask2);
 
     }
 
