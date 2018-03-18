@@ -50,17 +50,14 @@ public class Task2ImplSimple implements IElementNumberAssigner {
         и количества циклических последовательностей.
         Их можно удалить:
         */
-        int numberOfIterationOuterWhile = 0, numberOfIterationInnerWhile = 0, numberOfIterationInnerFor = 0, numberOfCycles = 0, luckyNumbers = 0;
+        int numberOfIterationOuterWhile = 0, numberOfIterationInnerFor = 0, numberOfCycles = 0, luckyNumbers = 0;
 
-        //Создаем множество записей из отображения, чтобы у нас была возможность итерации по ним:
-
-
-
-        System.out.println();
+       /* System.out.println();
         for (IElement element : elements) {
             System.out.println("Index: " + elements.indexOf(element) + ". Number: " + element.getNumber() + " Proper number: " + numbers.get(elements.indexOf(element)));
-        }
+        }*/
 
+        //Создаем множество записей из отображения, чтобы у нас была возможность итерации по ним:
         Set<Map.Entry<Integer, Integer>> entrySet = theMap.entrySet();
         // Внешний цикл while выполняется до тех пор, пока отображение не станет пустым
         // (т.е. у каждого элемента списка elements, переданного в качестве аргумента, с индексом n
@@ -71,7 +68,7 @@ public class Task2ImplSimple implements IElementNumberAssigner {
             Iterator<Map.Entry<Integer, Integer>> iterator = entrySet.iterator();
             Map.Entry<Integer, Integer> entry = iterator.next();
             int elementIndex = entry.getValue();
-            System.out.println("elementIndex " + elementIndex);
+
             Set<Integer> setForChains = new LinkedHashSet<>();
 
             System.out.println();
@@ -90,6 +87,7 @@ public class Task2ImplSimple implements IElementNumberAssigner {
                 System.out.println("Позже (на новой итерации внешнего цикла) ему будет присвоено уже правильное значение, равное " + numbers.get(elementIndex));
                 System.out.println("Оно будет взято из отсортированного списка numbers, где оно уже храниться по индексу elementIndex");
                 System.out.println();
+
                 theMap.put(maxNumberValue + 1, elementIndex);
                 theMap.remove(elements.get(elementIndex).getNumber());
                 elements.get(elementIndex).setupNumber(maxNumberValue + 1);
@@ -113,49 +111,18 @@ public class Task2ImplSimple implements IElementNumberAssigner {
                     elements.get(elementIndex).setupNumber(numbers.get(elementIndex));
 
                 } //end for loop
-
+                elements.get(theMap.get(maxNumberValue + 1)).setupNumber(numbers.get(theMap.get(maxNumberValue + 1)));
+                theMap.remove(maxNumberValue + 1);
             }//end if
-            else
-                System.out.println("NOT A CYCLE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-
-
-
-
-            iterator = entrySet.iterator();
-
-            //Внутренний цикл while
-            while (iterator.hasNext()) {
-                numberOfIterationInnerWhile++;
-                entry = iterator.next();
-                int listIndex = entry.getValue();
-
-                if (entry.getKey().equals(numbers.get(listIndex))) {
-                    luckyNumbers++;
-                    System.out.print("Номер элемента совпал с тем, который он и должен иметь по порядку: ");
-                    System.out.println("Index: " + entry.getValue() + ". Number: " + entry.getKey());
-                    System.out.println();
-                    //Если текущий номер элемента совпал с тем, который он и должен иметь по порядку,
-                    // то просто удаляем запись из о нем из отображения и начинаем новую итерацию цикла:
-                    iterator.remove();
-                    continue;
-                }
-
-                /*с помощью следующего выражения if обеспечивается условие
-                "вызов {@code element.setNumber(i)} разрешен ⇔   ∀ e ∊ {@code elements} (e.number ≠ i)"
-                т.е. что вызов element.setNumber(i) выполняется тогда и только тогда, когда для всех элементов e, принадлежащих elements, e.number не равняется i.*/
-                if (!theMap.containsKey(numbers.get(listIndex))) {
-                    //System.out.println("Переназначаем номер! Было: " + elements.get(listIndex).getNumber() + " Стало: " + numbers.get(listIndex));
-                    //Меняем номер элемента:
-                    elements.get(listIndex).setupNumber(numbers.get(listIndex));
-                    //Удаляем запись об элементе из отображения:
-                    iterator.remove();
-                }
-            }//end inner while
+            else if (entry.getKey().equals(numbers.get(elementIndex))) {
+                System.out.println("NOT A CYCLE!!! IT'S LUCKY NUMBER!");
+                luckyNumbers++;
+                iterator.remove();
+            }
 
         }//end outer while
         System.out.println();
         System.out.println("NUMBER OF ITERATIONS OUTER LOOP while(!theMap.isEmpty()).." + numberOfIterationOuterWhile);
-        System.out.println("NUMBER OF ITERATIONS INNER LOOP while(iterator.hasNext())." + numberOfIterationInnerWhile);
         System.out.println("NUMBER OF ITERATIONS INNER LOOP for()....................." + numberOfIterationInnerFor);
         System.out.println("NUMBER OF CYCLES.........................................." + numberOfCycles);
         System.out.println("NUMBER OF LUCKY ELEMENTS.................................." + luckyNumbers);
