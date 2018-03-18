@@ -8,21 +8,23 @@ public class TestApp {
     private final static ElementExampleImpl.Context CONTEXT = new ElementExampleImpl.Context();
 
     public static void main(String[] args) {
-        //task1:
-        List<String[]> ListForTask1 = makeListForTask1(MAXSIZE);
-        //display(ListForTask1);
-        Task1Impl.INSTANCE.sort(ListForTask1, 0);
-        //display(ListForTask1);
-        Task1Impl.INSTANCE.sort(ListForTask1, 1);
-        //display(ListForTask1);
+       /* //task1:
+        List<String[]> listForTask1 = makeListForTask1(MAXSIZE);
+        //display(listForTask1);
+        Task1Impl.INSTANCE.sort(listForTask1, 0);
+        //display(listForTask1);
+        Task1Impl.INSTANCE.sort(listForTask1, 1);
+        //display(listForTask1);*/
 
         /////////////////////////////////////
         /////////////////////////////////////
 
         //task2:
-        List<IElement> ListForTask2 = makeListForTask2(MAXSIZE);
-        Task2Impl.INSTANCE.assignNumbers(Collections.unmodifiableList(ListForTask2));
-        System.out.println("NUMBER OF OPERATIONS setupNumber()............." + CONTEXT.getOperationCount());
+        List<IElement> listForTask2 = makeListForTask2(MAXSIZE);
+        displayListOfElements(listForTask2);
+        Task2Impl.INSTANCE.assignNumbers(Collections.unmodifiableList(listForTask2));
+        System.out.println("NUMBER OF OPERATIONS setupNumber()........................" + CONTEXT.getOperationCount());
+        //displayListOfElements(listForTask2);
 
     }
 
@@ -83,6 +85,12 @@ public class TestApp {
 
 
         return rows;
+    }
+
+    private static void displayListOfElements (List<IElement> elements) {
+          for (IElement element : elements) {
+            System.out.println("Index: " + elements.indexOf(element) + ". Number: " + element.getNumber());
+        }
     }
 
     private static List<IElement> makeListForTask2(int size){

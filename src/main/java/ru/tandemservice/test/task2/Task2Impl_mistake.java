@@ -16,7 +16,9 @@ public class Task2Impl_mistake implements IElementNumberAssigner {
     // ваша реализация должна работать, как singleton. даже при использовании из нескольких потоков.
 
     public static final IElementNumberAssigner INSTANCE = new Task2Impl_mistake();
-    private Task2Impl_mistake(){}
+
+    private Task2Impl_mistake() {
+    }
 
 
     /**
@@ -131,23 +133,23 @@ public class Task2Impl_mistake implements IElementNumberAssigner {
             }
         }
 
-        /*
-        Эти две переменные нужны только для подсчета кол-ва итераций внешнего цикла
+   /* Эти три переменные нужны только для подсчета кол-ва итераций внешнего и внутреннего цикла
         и количества циклических последовательностей.
         Их можно удалить:
         */
-        int numberOfIteration = 0, numberOfCycles = 0;
-
-
+        int numberOfIterationOuterWhile = 0, numberOfIterationInnerWhile = 0, numberOfCycles = 0;
+        Set<Map.Entry<Integer, Integer>> entrySet = theMap.entrySet();
         // Внешний цикл выполняется до тех пор, пока отображение не станет пустым
         // (т.е. у всех элементов списка номера будут совпадать с их индексами в списке):
 
         while (!theMap.isEmpty()) {
-            numberOfIteration++;
-            Set<Map.Entry<Integer, Integer>> entrySet = theMap.entrySet();
+            numberOfIterationOuterWhile++;
+
             Iterator<Map.Entry<Integer, Integer>> iterator = entrySet.iterator();
             int count = theMap.size();
             while (iterator.hasNext()) {
+                numberOfIterationInnerWhile++;
+
                 Map.Entry<Integer, Integer> entry = iterator.next();
                 int listIndex = entry.getValue();
                 //с помощью следующего выражения if обеспечивается условие
@@ -171,29 +173,30 @@ public class Task2Impl_mistake implements IElementNumberAssigner {
                 //System.out.println("\nWE HAVE CYCLES IN THE GRAPH!!!!");
                 iterator = entrySet.iterator();
                 Map.Entry<Integer, Integer> entry = iterator.next();
-                int currentElementValue = entry.getValue();
+                int currentElementIndex = entry.getValue();
 
                 /*
                 //Если захочется посмотреть элементы, образующие "цикл" перенумерации:
                 Set<Integer> setForCycles = new LinkedHashSet<>();
-                for (; setForCycles.add(currentElementValue); currentElementValue = theMap.get(currentElementValue)) {
-                    System.out.println("Adding in set = " + currentElementValue);
+                for (; setForCycles.add(currentElementIndex); currentElementIndex = theMap.get(currentElementIndex)) {
+                    System.out.println("Adding in set = " + currentElementIndex);
                 }
                 Integer[] f = setForCycles.toArray(new Integer[setForCycles.size()]);
                 System.out.println("Последнее значение " + f[f.length - 1]);
                 */
                 System.out.println("BREAK THE CYCLE #" + numberOfCycles++);
 
-                theMap.put(-1, currentElementValue);
-                theMap.remove(elements.get(currentElementValue).getNumber());
-                elements.get(currentElementValue).setupNumber(-1);
+                theMap.put(-1, currentElementIndex);
+                theMap.remove(elements.get(currentElementIndex).getNumber());
+                elements.get(currentElementIndex).setupNumber(-1);
             }
         }
 
        /* for (IElement element : elements) {
             System.out.println("Index: " + elements.indexOf(element) + ". Number: " + element.getNumber());
         }*/
-        System.out.println("NUMBER OF ITERATIONS while(!theMap.isEmpty()).." + numberOfIteration);
+        System.out.println("NUMBER OF ITERATIONS while(!theMap.isEmpty()).." + numberOfIterationOuterWhile);
+        System.out.println("NUMBER OF ITERATIONS while(iterator.hasNext()).." + numberOfIterationInnerWhile);
         System.out.println("NUMBER OF CYCLES..............................." + numberOfCycles);
     }
 
