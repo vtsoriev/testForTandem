@@ -1,6 +1,5 @@
 import java.util.*;
 
-import ru.tandemservice.test.task1.*;
 import ru.tandemservice.test.task2.*;
 
 public class TestApp {
@@ -22,7 +21,7 @@ public class TestApp {
         //task2:
         List<IElement> listForTask2 = makeListForTask2(MAXSIZE);
         displayListOfElements(listForTask2);
-        Task2ImplSimple.INSTANCE.assignNumbers(Collections.unmodifiableList(listForTask2));
+        Task2Impl.INSTANCE.assignNumbers(Collections.unmodifiableList(listForTask2));
         System.out.println("NUMBER OF OPERATIONS setupNumber()........................" + CONTEXT.getOperationCount());
         displayListOfElements(listForTask2);
 
@@ -92,6 +91,7 @@ public class TestApp {
           for (IElement element : elements) {
             System.out.println("Index: " + elements.indexOf(element) + ". Number: " + element.getNumber());
         }
+        System.out.println();
     }
 
     private static List<IElement> makeListForTask2(int size){
