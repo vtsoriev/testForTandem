@@ -77,18 +77,27 @@ public class Task2Impl implements IElementNumberAssigner {
           значениям же присваивать индекс элемента в переданном в качестве аргумента метода списке.
           Для сортировки номеров можно использовать ArrayList.
         */
-        Map<Integer, Integer> theMap = new HashMap<>();
-        List<Integer> numbers = new ArrayList<>(elements.size());
+        int elementsSize = elements.size();
+        Map<Integer, Integer> theMap = new HashMap<>(elementsSize);
+        List<Integer> numbers = new ArrayList<>(elementsSize);
         /*
           В цикле пробегаемся по переданному нам списку, заполняя отображение парами "номер элемента" (ключ)
           - "индекс элемента в переданном списке"(значение). Номера кроме этого добавляем еще и в список numbers,
           для последующей сортировки:
         */
-        for (IElement element : elements) {
-            int number = element.getNumber();
-            theMap.put(number, elements.indexOf(element));
+        IElement [] arrayOfElements = elements.toArray(new IElement[elementsSize]);
+        for (int i =0; i<elementsSize; i++){
+            int number = arrayOfElements[i].getNumber();
+            theMap.put(number, i);
             numbers.add(number);
         }
+
+     /*   for (IElement element : elements) {
+            int number = element.getNumber();
+            theMap.put(number, elements.indexOf(element)); //Плохой вариант, т.к. время выполнения цикла будет O(N*N)
+            numbers.add(number);
+        }*/
+
         // Сортируем список с номерами:
         numbers.sort(Integer::compareTo);
         // Сохраняем в переменную максимальное значение, которое принимает поле номер в переданном списке
