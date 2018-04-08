@@ -165,7 +165,7 @@ public class Task2Impl implements IElementNumberAssigner {
                     чтобы обратиться к элементу из списка elements для изменения номера этого элемента
                     методом IElement#setupNumber().*/
 
-                    int numInElements = elements.get(numbers.indexOf(num)).getNumber();
+                    int numInElements = elements.get(numbers.indexOf(num)).getNumber();//ИЛИ ОСТАВИТЬ ВСЕ КАК ЕСТЬ?
                     elementIndex = theMap.get(numInElements);
                     theMap.remove(elements.get(elementIndex).getNumber());
                     elements.get(elementIndex).setupNumber(numbers.get(elementIndex));
