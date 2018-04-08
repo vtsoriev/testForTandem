@@ -29,13 +29,13 @@ public class Task2Impl implements IElementNumberAssigner {
      * Во внешнем цикле мы каждый раз создаем итератор, а затем инициализируем переменную elementIndex.
      * Далее создается множество setForChains для определения цепочки номеров, образующих циклическую последовательность.
      * Это необходимо, чтобы мы смогли разбить цикличность и по цепочке от конца к началу перенумеровать элементы в списке elements.
-     *
+     * <p>
      * Этим обеспечивается выполнение условия:
      * "вызов {@code element.setNumber(i)} разрешен ⇔   ∀ e ∊ {@code elements} (e.number ≠ i).
      * В итоге у элементов, попавших в цепочку, номера будут соответствовать их расположению в списке.
      * <p>
      * Вообще, все номера делятся на две категории:
-     *
+     * <p>
      * 1) те, чьи значения текущий номер/правильный номер в списке образуют "цикл",
      * т.е. циклической последовательности чисел, полученных по правилу:
      * если мы в данный момент не можем переназначить номер для текущего элемента, т.к. новый номер, который мы хотим
@@ -49,13 +49,13 @@ public class Task2Impl implements IElementNumberAssigner {
      * Чтобы разорвать подобные порочные круги, приходится на каждый из таких "циклов"
      * тратить одну дополнительную операцию setupNumber(),
      * которая присваивает временный номер (maxNumberValue+1).
-     *
+     * <p>
      * 2) те, которым посчастливилось случайно получить правильный номер, т.е. их первоначальный номер совпал с правильным.
      * Эта категория номеров также попадает во множество setForChains, но это множество всегда содержит только один такой номер,
      * т.к. цикл  while (setForChains.add(numbers.get(elementIndex))) прерывается после первой итерации.
      * Это позволяет нам обработать такие случаи особым образом, используя if...else.
-     *
-     *
+     * <p>
+     * <p>
      * <p>
      * Т.о. количество операций {@link IElement#setupNumber(int)} будет равно количеству элементов в списке,
      * чьи номера не совпадают с правильными номерами из отсортированного списка numbers, соответствующими их расположению,
@@ -85,8 +85,8 @@ public class Task2Impl implements IElementNumberAssigner {
           - "индекс элемента в переданном списке"(значение). Номера кроме этого добавляем еще и в список numbers,
           для последующей сортировки:
         */
-        IElement [] arrayOfElements = elements.toArray(new IElement[elementsSize]);
-        for (int i =0; i<elementsSize; i++){
+        IElement[] arrayOfElements = elements.toArray(new IElement[elementsSize]);
+        for (int i = 0; i < elementsSize; i++) {
             int number = arrayOfElements[i].getNumber();
             theMap.put(number, i);
             numbers.add(number);
@@ -143,8 +143,8 @@ public class Task2Impl implements IElementNumberAssigner {
                 System.out.println("BREAK THE CYCLE #" + (numberOfCycles++) + ". Количество номеров в циклической последовательности: " + setForChains.size());
                 System.out.println("По индексу elementIndex (=" + elementIndex + ") в elements хранится значение number (это текущий номер элемента), равное " + elements.get(elementIndex).getNumber());
                 System.out.println("Сейчас этому элементу будет присвоено временное значение (maxNumberValue + 1), равное " + (maxNumberValue + 1) + ", для того, чтобы разбить цикл. ");
-                System.out.println("Позже (на новой итерации внешнего цикла) ему будет присвоено уже правильное значение, равное " + numbers.get(elementIndex));
-                System.out.println("Оно будет взято из отсортированного списка numbers, где оно уже храниться по индексу elementIndex");
+                System.out.println("Далее ему будет присвоено уже правильное значение, равное " + numbers.get(elementIndex));
+                System.out.println("Оно будет взято из отсортированного списка numbers, где оно уже хранится по индексу elementIndex");
                 System.out.println();
                 //Собственно, разбиваем циклическую последовательность, назначая элементу временный номер, равный (maxNumberValue + 1):
                 theMap.put(maxNumberValue + 1, elementIndex); //помещаем в отображение новую запись
@@ -165,7 +165,7 @@ public class Task2Impl implements IElementNumberAssigner {
                     чтобы обратиться к элементу из списка elements для изменения номера этого элемента
                     методом IElement#setupNumber().*/
 
-                    int numInElements = elements.get(numbers.indexOf(num)).getNumber();
+                    int numInElements = elements.get(numbers.indexOf(num)).getNumber(); //Плохой вариант, т.к. время выполнения цикла будет O(N*N). НУЖНО ВСЕ ПЕРЕДЕЛАТЬ!!!
                     elementIndex = theMap.get(numInElements);
                     theMap.remove(elements.get(elementIndex).getNumber());
                     elements.get(elementIndex).setupNumber(numbers.get(elementIndex));
@@ -178,7 +178,7 @@ public class Task2Impl implements IElementNumberAssigner {
                 theMap.remove(maxNumberValue + 1);
             }//end if
             //Если нам повезло и менять номер не нужно, т.к.он правильный, мы убираем из отображения запись о нем:
-            else if (entry.getKey().equals(numbers.get(elementIndex))) {
+            else {
                 System.out.println("NOT A CYCLE!!! IT'S LUCKY NUMBER!");
                 System.out.println("Index: " + entry.getValue() + ". Number: " + entry.getKey());
                 luckyNumbers++;

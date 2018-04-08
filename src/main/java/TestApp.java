@@ -3,7 +3,7 @@ import java.util.*;
 import ru.tandemservice.test.task2.*;
 
 public class TestApp {
-    private final static int MAXSIZE = 1000000;
+    private final static int MAXSIZE = 100000;
     private final static ElementExampleImpl.Context CONTEXT = new ElementExampleImpl.Context();
 
     public static void main(String[] args) {
